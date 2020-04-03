@@ -1,6 +1,5 @@
 # ignore compiled python
 *.pyc
 
-*.txt
 *.ini
 *.spyproject
