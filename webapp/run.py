@@ -1,5 +1,8 @@
 from webapp import app
 
+import os
+import sys
+
 import re
 import json
 import plotly
@@ -17,15 +20,10 @@ from models.custom_transform import tokenize
 
 
 # add path to `models` directory to load `custom_transform`
-import os
 wdir = os.getcwd()
-import sys
 # append path to `model` to load custom transformers
-print('\nPath:', sys.path)
-
-print('\n\nnew path\n', )
 sys.path.append(wdir+'\models')
-print(sys.path)
+
 #%%
 # NOTE:
 #   function `tokenize` should be imported from another script when training
@@ -95,7 +93,7 @@ def load_data(database_filepath):
 # load model
 
 print("Trying to load model")
-model = load('clf_model.pkl')
+model = load('models/clf_model.pkl')
 
 X, Y, df, category_names = load_data('data/disaster_response.db')
 
