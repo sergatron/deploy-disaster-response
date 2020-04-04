@@ -21,7 +21,7 @@ from models.custom_transform import tokenize
 
 # add path to `models` directory to load `custom_transform`
 wdir = os.getcwd()
-
+print('\nWorking dir:', wdir)
 # append path to `model` to load custom transformers
 new_path = os.path.join(wdir, 'models')
 if new_path not in sys.path:
