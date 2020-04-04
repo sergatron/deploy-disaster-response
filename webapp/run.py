@@ -21,8 +21,16 @@ from models.custom_transform import tokenize
 
 # add path to `models` directory to load `custom_transform`
 wdir = os.getcwd()
+
 # append path to `model` to load custom transformers
-sys.path.append(wdir+'\models')
+new_path = os.path.join(wdir, 'models')
+if new_path not in sys.path:
+    print("\nAdded new path:")
+    sys.path.append(new_path)
+    print()
+    print(sys.path[-1])
+
+
 
 #%%
 # NOTE:
@@ -91,9 +99,10 @@ def load_data(database_filepath):
 #%%
 
 # load model
-
-print("Trying to load model")
-model = load('models/clf_model.pkl')
+try:
+    model = load('models/clf_model.pkl')
+except ModuleNotFoundError:
+    model = load('clf_model.pkl')
 
 X, Y, df, category_names = load_data('data/disaster_response.db')
 
