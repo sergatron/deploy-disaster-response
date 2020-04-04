@@ -43,49 +43,49 @@ from sklearn.metrics import (confusion_matrix, f1_score, precision_score,
 from sklearn.utils import resample
 
 from custom_transform import (KeywordSearch, StartingVerbExtractor,
-                              GetVerbNounCount, EntityCount)
+                              GetVerbNounCount, EntityCount, tokenize)
 
 #%%
 
-def tokenize(text):
-    """
-    Replace `url` with empty space "".
-    Tokenize and lemmatize input `text`.
-    Converts to lower case and strips whitespaces.
+# def tokenize(text):
+#     """
+#     Replace `url` with empty space "".
+#     Tokenize and lemmatize input `text`.
+#     Converts to lower case and strips whitespaces.
 
 
-    Returns:
-    --------
-        dtype: list, containing processed words
-    """
+#     Returns:
+#     --------
+#         dtype: list, containing processed words
+#     """
 
-    lemm = WordNetLemmatizer()
+#     lemm = WordNetLemmatizer()
 
-    url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+#     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
-    detected_urls = re.findall(url_regex, text)
-    for url in detected_urls:
-        text = text.replace(url, "")
+#     detected_urls = re.findall(url_regex, text)
+#     for url in detected_urls:
+#         text = text.replace(url, "")
 
-    # load stopwords
-    stop_words = stopwords.words("english")
+#     # load stopwords
+#     stop_words = stopwords.words("english")
 
-    remove_words = ['one', 'see', 'please', 'thank', 'thank you', 'thanks',
-                    'we', 'us', 'you', 'me', 'their', 'there', 'here']
-    for addtl_word in remove_words:
-        stop_words.append(addtl_word)
+#     remove_words = ['one', 'see', 'please', 'thank', 'thank you', 'thanks',
+#                     'we', 'us', 'you', 'me', 'their', 'there', 'here']
+#     for addtl_word in remove_words:
+#         stop_words.append(addtl_word)
 
-    # remove punctuations (retain alphabetical and numeric chars) and convert to all lower case
-    # tokenize resulting text
-    tokens = word_tokenize(re.sub(r"[^a-zA-Z]", ' ', text.lower().strip()))
+#     # remove punctuations (retain alphabetical and numeric chars) and convert to all lower case
+#     # tokenize resulting text
+#     tokens = word_tokenize(re.sub(r"[^a-zA-Z]", ' ', text.lower().strip()))
 
-    # drop stop words
-    no_stops = [word for word in tokens if word not in stop_words]
+#     # drop stop words
+#     no_stops = [word for word in tokens if word not in stop_words]
 
-    # lemmatize and remove stop words
-    lemmatized = [lemm.lemmatize(word) for word in tokens if word not in stop_words]
+#     # lemmatize and remove stop words
+#     lemmatized = [lemm.lemmatize(word) for word in tokens if word not in stop_words]
 
-    return lemmatized
+#     return lemmatized
 
 
 def load_data(database_filepath, n_sample=5000):

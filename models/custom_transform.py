@@ -5,57 +5,20 @@ Created on Fri Dec  6 17:32:00 2019
 @author: smouz
 
 """
-
-import os
 import re
-import gc
-import time
-
-import sqlite3
-from sqlalchemy import create_engine
 
 import numpy as np
 import pandas as pd
-from joblib import dump, load
 
-import gensim
-from gensim.models import Word2Vec, CoherenceModel
-
-from nltk.data import find
 import nltk
-from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
-from nltk.stem.porter import PorterStemmer
+
 from nltk import ne_chunk, pos_tag
 
-
-from spellchecker import SpellChecker
-
-from sklearn.impute import KNNImputer, SimpleImputer
-
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline, FeatureUnion, make_pipeline
 
-from sklearn.preprocessing import (Normalizer, QuantileTransformer,
-                                   PolynomialFeatures, RobustScaler,
-                                   StandardScaler, FunctionTransformer)
-
-from sklearn.feature_extraction.text import (CountVectorizer,
-                                             TfidfTransformer,
-                                             HashingVectorizer
-                                             )
-
-
-from sklearn.multioutput import MultiOutputClassifier
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import (RandomForestClassifier,
-                              ExtraTreesClassifier,
-                              BaggingClassifier,
-                              RandomTreesEmbedding,
-                              StackingClassifier
-                              )
 
 #%%
 
@@ -95,9 +58,9 @@ def tokenize(text):
     no_stops = [word for word in tokens if word not in stop_words]
 
     # lemmatize and remove stop words
-    # lemmatized = [lemm.lemmatize(word) for word in tokens if word not in stop_words]
+    lemmatized = [lemm.lemmatize(word) for word in tokens if word not in stop_words]
 
-    return no_stops
+    return lemmatized
 
 #%%
 def drop_class(Y):
@@ -362,95 +325,6 @@ class EntityCount(BaseEstimator, TransformerMixin):
 
     def transform(self, X):
         return pd.Series(X).apply(self.get_entity)
-
-
-
-#%%
-
-
-
-class SentenceVector(BaseEstimator, TransformerMixin):
-    """
-    Extracts various named entities from given text input.
-    Input can consist of a single string or an array of text
-    documents from which to extract the counts of named
-    entities.
-
-    """
-    def __init__(self, size=100, min_count=5, window=5, iter=5, workers=6):
-        self.size = size
-        self.min_count = min_count
-        self.window = window
-        self.workers = workers
-        self.window = window
-        self.iter = iter
-
-    def _word2vec_model(self, X):
-        # tokenize messages, building model
-        toks = pd.Series(X).apply(tokenize).tolist()
-        wv_model = Word2Vec(toks,
-                            size=self.size,
-                            min_count=self.min_count,
-                            window=self.window,
-                            workers=self.workers
-                            )
-
-        return wv_model
-
-    def sentence_vector(self, text, model):
-        """
-        Convert string sentence into a vector representation. Each word is
-        converted into a vector and combined with other word vectors.
-
-        If a word is not found in the learned vocabulary, the vector is set
-        to zero.
-
-        Params:
-        -------
-            text : Sentence
-
-        Returns:
-        -------
-            sentence_vector : numpy array
-
-        """
-
-        text = tokenize(text)
-        sentence_vec = np.empty(self.size, dtype=np.float64)
-
-        # iterate over each word in tokenized text
-        for word in text:
-            # get word vector, if word exists in vocab
-            try:
-                if sentence_vec.shape[0] < 1:
-                    sentence_vec = model.wv[word]
-                word_vector = model.wv[word]
-                sentence_vec = np.add(word_vector, sentence_vec) / (self.size)
-
-            # if not found in vocab
-            except Exception as e:
-                # print(e)
-                # set word_vector equal to zero
-                word_vector = np.zeros_like(sentence_vec.shape)
-        return sentence_vec
-
-    def fit(self, x, y=None):
-        return self
-
-    def transform(self, X):
-        model = self._word2vec_model(X)
-        # stack arrays vertically
-        stacked = np.vstack([self.sentence_vector(item, model) for item in X])
-
-        # check for missing values
-        if np.count_nonzero(stacked) > 0:
-            fill_value = np.median(stacked)
-            # fill missing values
-            stacked = np.where(np.isnan(stacked), fill_value, stacked)
-
-        return stacked
-
-
 
 
 
