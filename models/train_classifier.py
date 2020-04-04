@@ -42,9 +42,7 @@ from sklearn.metrics import (confusion_matrix, f1_score, precision_score,
 
 from sklearn.utils import resample
 
-from custom_transform import (KeywordSearch, StartingVerbExtractor,
-                              GetVerbNounCount, EntityCount, tokenize)
-
+from custom_transform import tokenize
 #%%
 
 # def tokenize(text):

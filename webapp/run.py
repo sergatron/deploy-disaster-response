@@ -1,15 +1,10 @@
 from webapp import app
 
-import sys
-# append path to `model` to load custom transformers
-sys.path.append('C:\\Users\\smouz\\OneDrive\\Desktop\\deploy_project\\disaster-response-project\\models')
-
 import re
 import json
 import plotly
 import pandas as pd
 import numpy as np
-
 
 from plotly.graph_objs import Bar
 
@@ -18,8 +13,19 @@ from sqlalchemy import create_engine
 
 from flask import render_template, request
 
-# from models.custom_transform import tokenize
+from models.custom_transform import tokenize
 
+
+# add path to `models` directory to load `custom_transform`
+import os
+wdir = os.getcwd()
+import sys
+# append path to `model` to load custom transformers
+print('\nPath:', sys.path)
+
+print('\n\nnew path\n', )
+sys.path.append(wdir+'\models')
+print(sys.path)
 #%%
 # NOTE:
 #   function `tokenize` should be imported from another script when training
@@ -87,7 +93,9 @@ def load_data(database_filepath):
 #%%
 
 # load model
-model = load('models/clf_model.pkl')
+
+print("Trying to load model")
+model = load('clf_model.pkl')
 
 X, Y, df, category_names = load_data('data/disaster_response.db')
 
