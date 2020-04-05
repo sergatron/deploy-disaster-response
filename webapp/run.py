@@ -102,6 +102,7 @@ def load_data(database_filepath):
 try:
     model = load('models/clf_model.pkl')
 except ModuleNotFoundError:
+    print('Loaded model on 2nd attempt')
     model = load('clf_model.pkl')
 
 X, Y, df, category_names = load_data('data/disaster_response.db')

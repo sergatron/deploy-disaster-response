@@ -64,7 +64,35 @@
     {% endfor %}
 	
 </div>
+<hr>
+<div class="container text-center" style="margin-top:100">
 
+	<footer>
+		<div class="col-sm-12">
+			<ul>
+				<div class="mx-auto"><h5>Contact</h5></div>
+					<h6>
+						<a href="mailto:smouzykin@gmail.com">E-Mail</a> | 
+						<a href="https://www.linkedin.com/in/sergey-mouzykin-bb144778/">LinkedIn</a> | 
+						<a href="https://github.com/sergatron">GitHub</a> | 
+						<a href="https://medium.com/@smouzykin">Medium</a>
+					</h6>
+			</ul>
+		</div>
+		
+		<div class="col-sm-12">
+			<ul>
+				<div class="mx-auto">
+					<p>
+						This web application was deployed using <a href="https://www.heroku.com/home">Heroku</a>. You can view this project on <a href="https://github.com/sergatron/deploy-disaster-response">GitHub.</a>
+					</p>
+				</div>
+			</ul>
+		</div>
+
+	</footer>
+	
+</div>
 <script type="text/javascript">
     const graphs = {{graphJSON | safe}};
     const ids = {{ids | safe}};
