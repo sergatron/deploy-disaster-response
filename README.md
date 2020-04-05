@@ -16,13 +16,13 @@ For example, a message is entered, "we need food and clothing". The output would
 
 Displays some visuals and requests user's query for prediction.
 
-![](disaster_response_pipeline_project/img/app_index.png)
+![](img/app_index.png)
 
 ### Predictions Page
 
 Predicted categories are highlighted.
 
-![](disaster_response_pipeline_project/img/app_predict.png)
+![](img/app_predict.png)
 
 
 
