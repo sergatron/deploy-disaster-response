@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr  6 20:36:45 2020
 
-@author: smouz
+"""
+Plotly graphs for use in the `run.py` script.
 
 """
 
@@ -41,11 +39,15 @@ def plot_bar(x, y, title=''):
                       marker_line_width=1.5,
                       opacity=0.7)
     # Edit layout
-    fig.update_layout(title=title,
+    fig.update_layout(
+                      # width=1000,
+                      height=750,
+                      title=title,
                       yaxis_title='Word',
                       plot_bgcolor='white',
                       yaxis=xy_axis,
                       xaxis=x_axis,
+
 
                      )
     return fig

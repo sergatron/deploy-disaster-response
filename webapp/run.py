@@ -130,7 +130,7 @@ def index():
         opacity=0.7
         )
 
-    # create visuals
+    # create initial visuals
     graphs = [
         {
             'data': [
@@ -166,14 +166,33 @@ def index():
     # load data
     top_words = pd.read_csv('data/top_words.csv')
     bottom_words = pd.read_csv('data/bottom_words.csv')
+    bigram_top_words = pd.read_csv('data/bigram_top_words.csv')
+    bigram_bottom_words = pd.read_csv('data/bigram_bottom_words.csv')
 
-    # plot bar graphs
-    top_fig = plot_bar(x=top_words['count'], y=top_words['word'], title='Most Frequent Words')
-    bottom_fig = plot_bar(x=bottom_words['count'], y=bottom_words['word'], title='Least Frequent Words')
+    #### Uni-gram Plots
+    top_fig = plot_bar(x=top_words['count'],
+                       y=top_words['word'],
+                       title='Most Frequent Words (Unigram)')
+    bottom_fig = plot_bar(x=bottom_words['count'],
+                          y=bottom_words['word'],
+                          title='Least Frequent Words (Unigram)')
+
+
+    #### Bi-gram plots
+    bigram_top_fig = plot_bar(
+        x=bigram_top_words['count'],
+        y=bigram_top_words['word'],
+        title='Most Frequent Words (Bigram)')
+    bigram_bottom_fig = plot_bar(
+        x=bigram_bottom_words['count'],
+        y=bigram_bottom_words['word'],
+        title='Least Frequent Words (Bigram)')
 
     # convert plots to json; and append to list
     graphs.append(top_fig.to_plotly_json())
     graphs.append(bottom_fig.to_plotly_json())
+    graphs.append(bigram_top_fig.to_plotly_json())
+    graphs.append(bigram_bottom_fig.to_plotly_json())
 
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]

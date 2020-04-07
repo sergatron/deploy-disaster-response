@@ -1,7 +1,7 @@
-
-import os
-import sys
-
+"""
+Extracts word count from the messages using CountVectorizer. Outputs a csv file
+with the most and least frequent word occurance throughout the documents.
+"""
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -17,10 +17,6 @@ from sqlalchemy import create_engine
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import NMF
 
-
-pd.options.display.max_columns = 30
-pd.options.display.max_rows = 50
-pd.options.display.width = 100
 
 #%%
 
@@ -94,6 +90,7 @@ def tokenize(text):
     """
 
     lemm = WordNetLemmatizer()
+    stemmer = SnowballStemmer('english')
 
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
@@ -118,12 +115,14 @@ def tokenize(text):
 
     # lemmatize and remove stop words
     lemmatized = [lemm.lemmatize(word) for word in tokens if word not in stop_words]
+    # stemmed = [stemmer.stem(word) for word in tokens if word not in stop_words]
+
 
     return lemmatized
 
 #%%
 
-X, Y, df, category_names = load_data('data/disaster_response.db')
+X, Y, df, category_names = load_data('../data/disaster_response.db')
 
 
 #%%
@@ -131,10 +130,11 @@ count_vec = CountVectorizer(
         tokenizer=tokenize,
         ngram_range=(1, 1),
         dtype=np.uint16,
-        max_features=2000,
+        max_features=10000,
         max_df=0.99,
         min_df=2,
         )
+
 
 word_matrix = count_vec.fit_transform(X).toarray()
 
@@ -153,14 +153,20 @@ word_count = np.sum(word_matrix, axis=0)
 df = pd.DataFrame({'word': features,
                    'count': word_count})
 
-top_words = df.sort_values('count', ascending=False)[:25]
-bottom_words = df.sort_values('count', ascending=False)[-25:]
+### Unigram
+bottom_words = df.sort_values('count', ascending=True)[:25]
+top_words = df.sort_values('count', ascending=True)[-25:]
 
-# save to csv
-top_words.to_csv('data/top_words.csv')
-bottom_words.to_csv('data/bottom_words.csv')
+top_words.to_csv('../data/top_words.csv')
+bottom_words.to_csv('../data/bottom_words.csv')
 
 
+#### Bigram
+# bigram_bottom_words = df.sort_values('count', ascending=True)[:25]
+# bigram_top_words = df.sort_values('count', ascending=True)[-25:]
+
+# bigram_top_words.to_csv('../data/bigram_top_words.csv')
+# bigram_bottom_words.to_csv('../data/bigram_bottom_words.csv')
 
 
 #%%
