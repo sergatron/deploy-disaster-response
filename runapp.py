@@ -1,5 +1,6 @@
 from webapp import app
 import nltk
+import os
 
 nltk.download(['stopwords', 'punkt', 'wordnet', 'averaged_perceptron_tagger', 'maxent_ne_chunker', 'words',])
 

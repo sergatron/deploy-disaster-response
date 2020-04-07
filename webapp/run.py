@@ -17,7 +17,7 @@ from sqlalchemy import create_engine
 from flask import render_template, request
 
 from models.custom_transform import tokenize
-
+from eda.word_bar_plot import plot_bar
 
 # add path to `models` directory to load `custom_transform`
 wdir = os.getcwd()
@@ -123,13 +123,20 @@ def index():
     # extract category names and count of each
     category_names = list(Y.sum().sort_values(ascending=False).index)
     category_values = list(Y.sum().sort_values(ascending=False))
+    marker = dict(
+        color='rgb(158,202,225)',
+        line_color='rgb(8,48,107)',
+        line_width=1.5,
+        opacity=0.7
+        )
 
     # create visuals
     graphs = [
         {
             'data': [
                 Bar(x = genre_names,
-                    y = genre_counts)
+                    y = genre_counts,
+                    marker = marker)
                 ],
 
             'layout': {
@@ -141,7 +148,8 @@ def index():
         {
             'data': [
                 Bar(x = category_names,
-                    y = category_values)
+                    y = category_values,
+                    marker = marker)
                 ],
             'layout': {
                 'title': 'Target Category Count',
@@ -151,12 +159,21 @@ def index():
                 'xaxis': {'title': 'Category',
                           'tickangle': -45,
                           }
-
                 }
-
             },
-
     ]
+
+    # load data
+    top_words = pd.read_csv('data/top_words.csv')
+    bottom_words = pd.read_csv('data/bottom_words.csv')
+
+    # plot bar graphs
+    top_fig = plot_bar(x=top_words['count'], y=top_words['word'], title='Most Frequent Words')
+    bottom_fig = plot_bar(x=bottom_words['count'], y=bottom_words['word'], title='Least Frequent Words')
+
+    # convert plots to json; and append to list
+    graphs.append(top_fig.to_plotly_json())
+    graphs.append(bottom_fig.to_plotly_json())
 
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
@@ -181,7 +198,7 @@ def go():
     classification_labels = model.predict([query])[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
 
-    # This will render the go.html Please see that file.
+    # This will render the go.html
     return render_template(
         'go.html',
         query=query,
