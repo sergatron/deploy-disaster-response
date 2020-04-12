@@ -17,7 +17,7 @@ from sqlalchemy import create_engine
 from flask import render_template, request
 
 from models.custom_transform import tokenize
-from eda.word_bar_plot import plot_bar
+from eda.word_plots import plot_bar, plot_clusters
 
 # add path to `models` directory to load `custom_transform`
 wdir = os.getcwd()
@@ -179,20 +179,23 @@ def index():
 
 
     #### Bi-gram plots
-    bigram_top_fig = plot_bar(
-        x=bigram_top_words['count'],
-        y=bigram_top_words['word'],
-        title='Most Frequent Words (Bigram)')
-    bigram_bottom_fig = plot_bar(
-        x=bigram_bottom_words['count'],
-        y=bigram_bottom_words['word'],
-        title='Least Frequent Words (Bigram)')
+    bigram_top_fig = plot_bar(x=bigram_top_words['count'],
+                              y=bigram_top_words['word'],
+                              title='Most Frequent Words (Bigram)')
+
+    bigram_bottom_fig = plot_bar(x=bigram_bottom_words['count'],
+                                 y=bigram_bottom_words['word'],
+                                 title='Least Frequent Words (Bigram)')
+
+    #### Clusters
+    cluster_fig = plot_clusters()
 
     # convert plots to json; and append to list
     graphs.append(top_fig.to_plotly_json())
     graphs.append(bottom_fig.to_plotly_json())
     graphs.append(bigram_top_fig.to_plotly_json())
     graphs.append(bigram_bottom_fig.to_plotly_json())
+    graphs.insert(0, cluster_fig)
 
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
