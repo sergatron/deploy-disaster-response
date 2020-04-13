@@ -5,7 +5,6 @@ Plotly graphs for use in the `run.py` script.
 """
 
 from plotly.graph_objs import Figure, Bar, Scatter
-# import plotly.graph_objs as go
 import plotly.express as px
 
 import numpy as np
@@ -98,6 +97,6 @@ def plot_clusters():
         xaxis_title='Component 1',
         yaxis_title='Component 2',
     )
-    return fig
 
+    return fig
 

@@ -60,7 +60,7 @@
         </div>
     {% endblock %}
 	
-    {% for id in ids %}
+    {% for id in ids_tsne %}
         <div id="{{id}}"></div>
 		<hr>
     {% endfor %}
@@ -100,8 +100,35 @@
     const ids = {{ids | safe}};
     for(let i in graphs) {
         Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
-    }
+    };
+	
+	const graphs_ngram = {{graphJSON_ngram | safe}};
+    const ids_ngram = {{ids_ngram | safe}};
+    for(let i in graphs_ngram) {
+        Plotly.plot(ids_ngram[i], graphs_ngram[i].data, graphs_ngram[i].layout);
+    };
+	
+	const graphJSON_tsne = {{graphJSON_tsne | safe}};
+    const ids_tsne = {{ids_tsne | safe}};
+    for(let i in graphJSON_tsne) {
+        Plotly.plot(ids_tsne[i], graphJSON_tsne[i].data, graphJSON_tsne[i].layout);
+    };
+	
+	
+	
+	
+	
+	
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+

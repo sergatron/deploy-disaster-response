@@ -131,7 +131,7 @@ def index():
         )
 
     # create initial visuals
-    graphs = [
+    graph_set_1 = [
         {
             'data': [
                 Bar(x = genre_names,
@@ -187,22 +187,39 @@ def index():
                                  y=bigram_bottom_words['word'],
                                  title='Least Frequent Words (Bigram)')
 
-    #### Clusters
-    cluster_fig = plot_clusters()
+    #### Clusters; t-SNE plot
+    cluster_fig = plot_clusters().to_plotly_json()
+    graph_set_3 = []
+    graph_set_3 = graph_set_3.append(cluster_fig)
+
 
     # convert plots to json; and append to list
-    graphs.append(top_fig.to_plotly_json())
-    graphs.append(bottom_fig.to_plotly_json())
-    graphs.append(bigram_top_fig.to_plotly_json())
-    graphs.append(bigram_bottom_fig.to_plotly_json())
-    graphs.insert(0, cluster_fig)
+    graph_set_2 = []
+    graph_set_2.append(top_fig.to_plotly_json())
+    graph_set_2.append(bottom_fig.to_plotly_json())
+    graph_set_2.append(bigram_top_fig.to_plotly_json())
+    graph_set_2.append(bigram_bottom_fig.to_plotly_json())
 
-    # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+    def encode_plots(graphs):
+        # encode plotly graphs in JSON
+        ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
+        graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+        return ids, graphJSON
+
+    ids, graphJSON = encode_plots(graph_set_1)
+    ids_ngram, graphJSON_ngram = encode_plots(graph_set_2)
+    ids_tsne, graphJSON_tsne = encode_plots(graph_set_3)
+
 
     # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON)
+    return render_template('master.html',
+                           ids=ids,
+                           graphJSON=graphJSON,
+                           ids_ngram=ids_ngram,
+                           graphJSON_ngram=graphJSON_ngram,
+                           ids_tsne=ids_tsne,
+                           graphJSON_tsne=graphJSON_tsne
+                           )
 
 
 # web page that handles user query and displays model results
