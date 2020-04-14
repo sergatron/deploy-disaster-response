@@ -19,8 +19,15 @@ import pandas as pd
 
 import gensim
 from gensim.models import Word2Vec, CoherenceModel
+import gensim
+import os
+from gensim.scripts.glove2word2vec import glove2word2vec
+from gensim.test.utils import datapath, get_tmpfile
+from gensim.models import KeyedVectors
+    
 from nltk.data import find
 import nltk
+
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -67,6 +74,19 @@ from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_sc
 pd.options.display.max_columns = 60
 pd.options.display.max_rows = 60
 
+def wv_model():
+
+    wdir = os.getcwd()
+    data_path = os.path.join(wdir, '..', 'data', 'glove.6B.50d.txt')
+    glove_file = datapath(data_path)
+
+    temp_path = os.path.join(wdir, '..', 'data', 'glove_test_50d.txt')
+    tmp_file = get_tmpfile(temp_path)
+    _ = glove2word2vec(glove_file, tmp_file)
+
+    model = KeyedVectors.load_word2vec_format(tmp_file)
+    
+    return model
 
 def tokenize(text):
     """

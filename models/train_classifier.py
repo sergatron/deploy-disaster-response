@@ -42,7 +42,7 @@ from sklearn.metrics import (confusion_matrix, f1_score, precision_score,
 
 from sklearn.utils import resample
 
-from .custom_transform import tokenize
+from custom_transform import tokenize
 #%%
 
 # def tokenize(text):
@@ -207,9 +207,9 @@ def build_model(clf):
         tokenizer=tokenize,
         ngram_range=(1, 1),
         dtype=np.uint16,
-        max_features=2200,
-        max_df=0.98,
-        min_df=5
+        max_features=2100,
+        max_df=0.99,
+        min_df=2
         )
 
     pipeline = Pipeline([
@@ -223,9 +223,11 @@ def build_model(clf):
             # ('entity_count', EntityCount()),
             # ('verb_extract', StartingVerbExtractor()),
 
-    ], n_jobs=1)),
-        ('scale', QuantileTransformer(output_distribution='normal')),
-        ('clf', MultiOutputClassifier(clf, n_jobs=N_JOBS))])
+            ], n_jobs=1)),
+        #('scale', QuantileTransformer(output_distribution='normal')),
+        ('scaler', StandardScaler(with_mean=False)),
+        ('clf', MultiOutputClassifier(clf, n_jobs=N_JOBS))
+        ])
 
     # return grid search object
     return pipeline
@@ -478,7 +480,7 @@ def main(sample_int=5000, gs=False, cv_split=3):
             X, Y, category_names = load_data(database_filepath, n_sample=sample_int)
             X_train, X_test, y_train, y_test = train_test_split(X,
                                                                 Y,
-                                                                test_size=0.15)
+                                                                test_size=0.2)
             del X, Y, database_filepath
             gc.collect()
 
@@ -486,7 +488,7 @@ def main(sample_int=5000, gs=False, cv_split=3):
 
             #### Upsample more important labels
             for col in ['food', 'clothing', 'hospitals']:
-                    X_train, y_train = upsample(X_train, y_train, col, 0.8)
+                    X_train, y_train = upsample(X_train, y_train, col, 0.95)
             #### Downsample
             X_train, y_train = downsample(X_train, y_train, 'aid_related', 0.5)
             print('\nResampled shape:')

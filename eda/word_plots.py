@@ -6,7 +6,6 @@ Plotly graphs for use in the `run.py` script.
 
 from plotly.graph_objs import Figure, Bar, Scatter
 import plotly.express as px
-
 import numpy as np
 
 #%%
