@@ -189,16 +189,13 @@ def index():
 
     #### Clusters; t-SNE plot
     cluster_fig = plot_clusters().to_plotly_json()
-    graph_set_3 = []
-    graph_set_3 = graph_set_3.append(cluster_fig)
-
+    graph_set_1.insert(0, cluster_fig)
 
     # convert plots to json; and append to list
-    graph_set_2 = []
-    graph_set_2.append(top_fig.to_plotly_json())
-    graph_set_2.append(bottom_fig.to_plotly_json())
-    graph_set_2.append(bigram_top_fig.to_plotly_json())
-    graph_set_2.append(bigram_bottom_fig.to_plotly_json())
+    graph_set_1.append(top_fig.to_plotly_json())
+    graph_set_1.append(bottom_fig.to_plotly_json())
+    graph_set_1.append(bigram_top_fig.to_plotly_json())
+    graph_set_1.append(bigram_bottom_fig.to_plotly_json())
 
     def encode_plots(graphs):
         # encode plotly graphs in JSON
@@ -207,18 +204,11 @@ def index():
         return ids, graphJSON
 
     ids, graphJSON = encode_plots(graph_set_1)
-    ids_ngram, graphJSON_ngram = encode_plots(graph_set_2)
-    ids_tsne, graphJSON_tsne = encode_plots(graph_set_3)
-
 
     # render web page with plotly graphs
     return render_template('master.html',
                            ids=ids,
                            graphJSON=graphJSON,
-                           ids_ngram=ids_ngram,
-                           graphJSON_ngram=graphJSON_ngram,
-                           ids_tsne=ids_tsne,
-                           graphJSON_tsne=graphJSON_tsne
                            )
 
 

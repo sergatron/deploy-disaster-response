@@ -34,8 +34,9 @@
 <div class="jumbotron">
     <div class="container">
         <h1 class="text-center">Disaster Response Project</h1>
-        <p class="text-center">Analyzing message data for disaster response</p>
-        <hr />
+        <h3 class="text-center">Analyzing message data for disaster response</h3>
+		<h4 class="text-center">Example: "Our homes have been destroyed by floods"</h4>
+        <hr/>
       
         <div class="row">
             <div class="col-lg-12 form-group-lg">
@@ -57,16 +58,28 @@
     {% block content %}
         <div class="page-header">
             <h1 class="text-center">Overview of Training Dataset</h1>
+			<h4 class="text-center">View this project in more detail on GitHub <a href="https://github.com/sergatron/disaster-response-project">here</a></h4>
+			<p>In the below figure, the clusters represent messages which are very close related in terms of its subject. This can be easily seen when exploring the smaller clusters around the perimeter of the plot.</p>
+			<p>As you can also see, there is significant overlap between some clusters. This overlap occurs because most messages have more than one category as there are 34 categories in total. For example, a single message can be classified as having a need for food, water, and shelter. In this case, there are three subjects being mentioned and thus creates a greater chance for overlap between three clusters.</p>
         </div>
     {% endblock %}
 	
-    {% for id in ids_tsne %}
+    {% for id in ids %}
         <div id="{{id}}"></div>
-		<hr>
     {% endfor %}
 	
 </div>
+
+<script type="text/javascript">
+    const graphs = {{graphJSON | safe}};
+    const ids = {{ids | safe}};
+    for(let i in graphs) {
+        Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
+    }
+</script>
+	
 <hr>
+
 <div class="container text-center" style="margin-top:100">
 
 	<footer>
@@ -94,32 +107,10 @@
 
 	</footer>
 	
-</div>
-<script type="text/javascript">
-    const graphs = {{graphJSON | safe}};
-    const ids = {{ids | safe}};
-    for(let i in graphs) {
-        Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
-    };
-	
-	const graphs_ngram = {{graphJSON_ngram | safe}};
-    const ids_ngram = {{ids_ngram | safe}};
-    for(let i in graphs_ngram) {
-        Plotly.plot(ids_ngram[i], graphs_ngram[i].data, graphs_ngram[i].layout);
-    };
-	
-	const graphJSON_tsne = {{graphJSON_tsne | safe}};
-    const ids_tsne = {{ids_tsne | safe}};
-    for(let i in graphJSON_tsne) {
-        Plotly.plot(ids_tsne[i], graphJSON_tsne[i].data, graphJSON_tsne[i].layout);
-    };
+</div>	
 	
 	
-	
-	
-	
-	
-</script>
+
 
 </body>
 </html>
