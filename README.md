@@ -1,7 +1,7 @@
 # Disaster Response Web App Deployment (Work in progess...)
 Portfolio [Link](https://github.com/sergatron/Portfolio)
 
-Deployed with Heroku: https://crisis-response.herokuapp.com/
+Deployed **Web-App** with Heroku: https://crisis-response.herokuapp.com/
 
  - TODO: 
     - update instructions and file structure
